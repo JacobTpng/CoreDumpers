@@ -2,8 +2,7 @@
 # spring4shell-capstone - vulnerable lab Dockerfile
 # --------------------------------------------------------------------
 # Builds a Tomcat-9 + Spring-5.3.15 container that is vulnerable to
-# CVE-2022-22965 (Spring4Shell).  Used only on *local* networks per
-# course policy.
+# CVE-2022-22965/Spring4Shell.  Used only on local* networks a
 #
 #  Maintainer : <Your-Name>  <you@example.com>
 #  Created    : 2025-04-25

@@ -13,7 +13,6 @@
 ```bash
 # 1. clone & install deps
 $ git clone https://github.com/JacobTpng/CoreDumpers.git
-$ cd spring4shell-capstone
 $ pip install -r requirements
 }
 

@@ -10,6 +10,7 @@ spring4shell-capstone/
 │   .gitignore          - excludes build artifacts, venvs, secrets
 │   docker-compose.yml  - brings up vulnerable Spring app + DB
 │
+├── .github/            - github coms to setup lab environment for vulnerable target
 ├── docs/               - design docs, slides, demo logs
 ├── vuln-lab/           - Docker recipe for vulnerable Tomcat‑Spring
 ├── exploit/            - Spring4Shell weaponised exploit chain
@@ -22,6 +23,11 @@ spring4shell-capstone/
 
 # detailed breakdown
 ---
+
+## `.github`
+| File / sub‑dir                 
+|---------------------------------
+| `worflow/ci.yml`   | github actions to setup and run fresh lab environment to use implant on. This lab runs pytest (which calls stage0_exploit.py, waits for the implant beacon, checks C2 API, etc.)
 
 ## `/docs`
 | File / sub‑dir                 

@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 #1. checkout source
+
+      - uses: actions/setup-python@v5 #2. Set up Python 3.11
+
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip #3. cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - run: pip install -r requirements.txt #4. install deps
+
+      # 5. start vulnerable lab environment
+      - run: |
+          docker compose -f docker-compose.yml up -d vuln-lab
+          # give Tomcat a few seconds
+          sleep 10
+
+      # 6. run pytest quietly 
+      - run: pytest -q
+
+      # 7. tear it all down
+      - run: docker compose -f docker-compose.yml down
+        if: always()
+
+  style-lints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install flake8 black
+      - run: flake8 .
+      - run: black --check .

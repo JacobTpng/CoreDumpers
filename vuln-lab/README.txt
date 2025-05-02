@@ -6,6 +6,8 @@ Isolated from the rest of the repo to spin it up with single command
 
 ## Quick-start
 
+Must have docker installed. Can get it at https://docs.docker.com/desktop/install/windows-install/
+
 ```bash
 # from repo root
 docker compose up --build -d springlab

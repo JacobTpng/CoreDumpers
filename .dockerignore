@@ -1,0 +1,22 @@
+#No git data to Docker daemon
+.git
+.gitignore
+#no Python cruft
+__pycache__
+*.pyc
+# IDE & OS files
+*.swp
+.DS_Store
+# test artefacts
+htmlcov/
+.tox/
+.pytest_cache/
+#anything mounted at runtime
+**/target/
+**/build/
+*.iml
+*.md
+**/.mvn/
+!vuln-lab/app.war  
+*.zip
+# ^ need to change based on name of war app downloaded

@@ -13,7 +13,10 @@
 # it bound to 127.0.0.1 or an isolated VM network.
 # ------------------------------------------------------------------
 set -e
-docker build -t spring4shell/lab:latest .
-if [ "$1" = "run" ]; then
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+docker build -t spring4shell/lab:latest "$SCRIPT_DIR"
+
+if [[ "$1" == "run" ]]; then
   docker run -d --rm -p 8080:8080 --name spring_lab spring4shell/lab:latest
+  echo "[+] Lab running at http://127.0.0.1:8080/ (ctrl-c to stop)"
 fi

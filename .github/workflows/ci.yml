@@ -28,7 +28,7 @@ jobs:
 
       # 5. start vulnerable lab environment
       - run: |
-          docker compose -f docker-compose.yml up -d vuln-lab
+          docker compose -f docker-compose.yml up -d springlab
           # give Tomcat a few seconds
           sleep 10
 

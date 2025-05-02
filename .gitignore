@@ -1,0 +1,43 @@
+#Make build and processing more efficient
+
+# Python
+*.py[cod]
+__pycache__/
+.eggs/
+dist/
+build/
+*.egg-info/
+
+# virtual envs
+.env
+.venv
+ENV/
+
+# coverage / test
+htmlcov/
+.tox/
+.pytest_cache/
+coverage.*
+
+# editor
+.DS_Store
+.vscode/
+.idea/
+
+# Docker artefacts
+*.tar
+*.zip
+*.war
+*.iml
+*.pyc
+
+# Maven
+target/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+.idea/
+__pycache__/
+.env

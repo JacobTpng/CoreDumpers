@@ -15,27 +15,27 @@ version: "3.9"
 services:
 
   # --- Vulnerable target ------------------------------------------------------
+
   springlab:
     image: tomcat:9.0.62-jdk11            #could also pin exact digest here
     container_name: spring4shell_vuln
     ports:
       - "8080:8080"                       # host → container
     volumes:
-      # read-only mount of the intentionally vulnerable app packaged as ROOT.war
+      #read-only mount of the intentionally vulnerable app packaged as ROOT.war
       - ./vuln-lab/app.war:/usr/local/tomcat/webapps/ROOT.war:ro
     environment:
       - TZ=UTC
     restart: unless-stopped
 
   # --- Command-and-Control server ----------------------------------
-  # Uncomment to get C2 to launch automatically with lab
-  #
-  # c2server:
-  #   build: ./c2                         #Dockerfile builds slim Python image
-  #   env_file: .env                      # AES key, DB path, etc.
-  #   ports:
-  #     - "5000:5000"
-  #   restart: unless-stopped
+  #get C2 to launch automatically with lab
+  c2server:
+    build: vuln-lab\Dockerfile   #Dockerfile builds slim Python image
+    env_file: .env               # AES key, DB path, etc.
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
 
 # Usage:
 #   docker-compose up --build -d    # start lab

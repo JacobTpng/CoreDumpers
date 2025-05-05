@@ -32,7 +32,8 @@ RUN mkdir -p /usr/local/tomcat/lib/vuln && \
       -o /usr/local/tomcat/lib/vuln/spring-core.jar
 
 # ---- minimal demo app (acts as exploit target) -----------------------------
-COPY simple-app.war /usr/local/tomcat/webapps/ROOT.war
+#renamed simple-app.war to app.war
+COPY app.war /usr/local/tomcat/webapps/ROOT.war
 # delete exploded folder if tomcat base image auto-expanded
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 

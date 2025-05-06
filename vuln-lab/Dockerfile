@@ -36,6 +36,9 @@ RUN mkdir -p /usr/local/tomcat/lib/vuln && \
 COPY app.war /usr/local/tomcat/webapps/ROOT.war
 # delete exploded folder if tomcat base image auto-expanded
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
+# ---- install python3 for exploit demo ------------------------------------
+# Force rebuild
+RUN echo "rebuild triggered" && apt-get update && apt-get install -y python3
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

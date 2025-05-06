@@ -6,17 +6,17 @@ Reference this to understand the layout and use of all files contained.
 ```
 spring4shell-capstone/
 │   README.md           - 60‑second build/run cheatsheet for graders
-│   Layout.md-          - **this file**
 │   .gitignore          - excludes build artifacts, venvs, secrets
 │   docker-compose.yml  - brings up vulnerable Spring app + DB
+|   .dockerignore       - resources for docker to ignore to prevent conflicts and increase efficiency
 │
 ├── .github/            - github coms to setup lab environment for vulnerable target
 ├── docs/               - design docs, slides, demo logs
 ├── vuln-lab/           - Docker recipe for vulnerable Tomcat‑Spring
 ├── exploit/            - Spring4Shell weaponised exploit chain
 ├── common/             - code shared by implant & C2 (crypto / JSON)
-├── implant/            - field implant that runs on the target host
-├── c2/                 - command‑and‑control server & implant UI
+├── .pytest_cache       - resources form downloading and using pytest for test functions
+├── c2/                 - command‑and‑control server & implant UI, including implant file
 ├── scripts/            - helper shell scripts (launch, cleanup …)
 └── tests/              - pytest unit + end‑to‑end checks
 ```
@@ -28,11 +28,13 @@ spring4shell-capstone/
 | File / sub‑dir                 
 |---------------------------------
 | `worflow/ci.yml`   | github actions to setup and run fresh lab environment to use implant on. This lab runs pytest (which calls stage0_exploit.py, waits for the implant beacon, checks C2 API, etc.)
+| `rewuirements.txt` | version requirements for .yml file like pytest~=8.2, cryptography~=42.0, Flask~=3.0, etc
 
 ## `/docs`
 | File / sub‑dir                 
 |---------------------------------
-| `design.md`           | Threat‑model, crypto decisions, protocol spec.      
+| `design.md`           | Threat‑model, crypto decisions, protocol spec.  
+| `Layout.md`           | This file    
 | `slides/`             | Final presentation                              
 | `video_link.txt`      | Single line: link to presentation
 
@@ -43,46 +45,36 @@ spring4shell-capstone/
 |-----------------------
 | `Dockerfile`         | Builds Ubuntu + JDK 11 + Tomcat 9 + vulnerable Spring 5.3.15 WAR. SHOULD ONLY RUN LOCALLY
 | `build.sh`           | Convenience script (`docker build && docker run …`), creates image tag `spring4shell-lab:latest`
+| `app.war`            | Pre-built Spring-Boot.2.6.4 WAR vulnerable to Spring4Shell CVE from https://github.com/sinjap/spring4shell/tree/main repo
+| `README.txt`         | Instructions to run to lab environment and close it
 
 ---
 
 ## `/exploit`
 | File                 
 |-------------------------
-| `poc_orig.py`          | Vanilla public PoC kept _read‑only_ for citation from github. Shouldn't be executed in our pipeline, just reference
+| `poc`                  | Vanilla public PoC kept _read‑only_ for citation from github. Shouldn't be executed in our pipeline, just reference. From https://github.com/entropyqueen/spring4shell-demo
 | `stage0_exploit.py`    | checks version, writes `payload.jsp`, triggers stager, called by `scripts/run_all.sh`
-| `payload.jsp`          | 9‑line JSP stager - `curl` the implant & exec, lands on the vulnerable server during exploitation
+| `payload.jsp`          | JSP stager - downloads and launches the Python implant
 
 ---
 
 ## `/common`
-Shared helper code so that implant and C2 server dont drift
-
 | File            
 |------------------
-| `protocol.py`   | Defines JSON schema (`{nonce,cmd,payload}`) plus `encode()/decode()` helpers
-| `crypto_lib.py` | ECDH key‑exchange + AES‑GCM encrypt/decrypt wrappers
-
-Write unit tests for both in `/tests` so refactors are safe.
----
-
-## `/implant`
-| File / sub‑dir  |
-|------------------
-| `implant.py`    | Main loop: handshake → long‑poll → execute tasks → respond. Packed with PyInstaller by `build.sh`
-| `persist/`      | OS‑specific persistence (e.g., `install_user_service.sh`, `add_run_key.ps1`). Called by `payload.jsp` post‑download
-| `build.sh`      | Creates `implant.exe` (Windows) or statically linked ELF (Linux). Run on dev box; artefact not checked into git. 
+| `protocol.py`   | JSON envelope for encode_message / decode_message.
+| `crypto_lib.py` | X25519 keypair + HKDF to AES‑GCM encrypt/decrypt
 
 ---
 
 ## `/c2`
 | File            
 |--------------------
-| `c2_server.py`    | Flask app: `/handshake`, `/tasks`, `/results` endpoints; SQLite storage. 
-| `implant.py`  | Rich‑TUI (or web) for live tasking; calls REST locally. 
-| `crypto_utils.py` | Thin shim that just `import common.crypto_lib` (kept for legacy). 
+| `c2_server.py`    | Flask app exposing endpoints: handshake, tasking, exfil, admin.
+| `static/`         | Public static files served at /static - HOLDS implant.py with Rich‑TUI (or web) for live tasking; calls REST locally
+| `__init__.py`     | marks c2 and implant.py as python package for imports 
 
-Run: `python c2/c2_server.py` and `python c2/implant.py` to get them up 
+Run: `python -m c2.c2_server` and `python -m c2.static.implant` to get them up (can replace with python3 or any other local version) since we're using __init__.py locators to put them on import path.
 ---
 
 ## `/scripts`
@@ -109,5 +101,5 @@ Can run with `pytest -q` locally
 
 ---
 
-Last updated: April 25 2025
+Last updated: May 5 2025
 

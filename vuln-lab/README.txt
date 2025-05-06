@@ -4,7 +4,7 @@ Builds intentionally vulnerable Tomcat 9 + Spring-Boot 2.6.4 WAR that will be ex
 Isolated from the rest of the repo to spin it up with single command
 ------------------------------------------------
 
-## Quick-start
+## Quick-start (ONLY TO RUN BY ITSELF. WILL DO THIS AUTOMATICALLY IF build.sh IS RUN)
 
 Must have docker installed. Can get it at https://docs.docker.com/desktop/install/windows-install/
 

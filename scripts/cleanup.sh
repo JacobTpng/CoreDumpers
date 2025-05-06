@@ -11,8 +11,25 @@
 #
 # Called automatically by GitHub Actions at the end of e2e tests.
 # ---------------------------------------------------------------
-set -e
-docker rm -f spring_lab 2>/dev/null || true
-pkill -f "python .*c2_server.py" 2>/dev/null || true
-rm -rf implant/build/ implant/dist/ *.log
-echo "[+] Environment tidied."
+#!/usr/bin/env bash
+
+# Exit on any error
+set -euo pipefail
+
+#stop C2 server 
+echo "[+] Stopping C2 server..."
+if [[ -n "${C2_PID:-}" ]]; then
+  kill "$C2_PID" || true
+fi
+#Fallback: kill remaining C2 processes
+pkill -f "python3 -m c2.c2_server" || true
+
+# Teardown Docker containers 
+echo "[+] Shutting down containers..."
+docker-compose down
+
+#Prune unused Docker resources 
+echo "[+] Pruning Docker volumes and networks..."
+docker system prune -f
+
+echo "[+] cleanup.sh complete."}

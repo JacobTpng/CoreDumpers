@@ -14,6 +14,8 @@
 # 1. clone & install deps
 $ git clone https://github.com/JacobTpng/CoreDumpers.git
 $ pip install -r requirements
+# or
+$ pip install -r .github/workflows/requirements.txt
 
 # IF ON LINUX - may have to run
 $ chmod +x /scripts/run_all.sh

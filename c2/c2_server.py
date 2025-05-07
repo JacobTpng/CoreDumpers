@@ -151,5 +151,10 @@ def admin_enqueue():
     task_queue.setdefault(sid, []).append(cmd)
     return jsonify({'status': 'enqueued', 'sid': sid, 'cmd': cmd}), 200
 
+@app.route('/admin/sessions', methods=['GET'])
+def list_sessions():
+    return jsonify(list(session_store.keys())), 200
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)

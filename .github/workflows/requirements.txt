@@ -4,3 +4,5 @@ Flask~=3.0
 requests~=2.32
 flake8~=7.0
 black~=24.4
+requests~=2.32
+bs4~=4.13
